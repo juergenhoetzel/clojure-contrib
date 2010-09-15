@@ -17,6 +17,7 @@
   clojure.contrib.repl-utils
   (:import (java.io File LineNumberReader InputStreamReader PushbackReader)
            (java.lang.reflect Modifier Method Constructor)
+           (java.util.regex Pattern)
            (clojure.lang RT Compiler Compiler$C))
   (:use [clojure.contrib.seq :only (indexed)]
         [clojure.java.browse :only (browse-url)]
@@ -48,7 +49,7 @@
 
 (defn- sortable [t]
   (apply str (map (fn [[a b]] (str a (format "%04d" (Integer. b))))
-                  (spartition 2 (concat (spartition #"\d+" t) [0])))))
+                  (partition 2 (concat (spartition #"\d+" t) [0])))))
 
 (defn- param-str [m]
   (str " (" (join
