@@ -77,11 +77,12 @@ code is doing."}
   arguments.  Nested calls to deftrace'd functions will print a
   tree-like structure."
   [name & definition]
-  `(do
-     (def ~name)
-     (let [f# (fn ~@definition)]
-       (defn ~name [& args#]
-         (trace-fn-call '~name f# args#)))))
+  (let [[pre-args fn-args] (split-with #(or (string? %) (map? %)) definition)]
+    `(do
+       (def ~name)
+       (let [f# (fn ~@fn-args)]
+	 (defn ~name ~@pre-args [& args#]
+	   (trace-fn-call '~name f# args#))))))
 
 (defmacro dotrace
   "Given a sequence of function identifiers, evaluate the body
